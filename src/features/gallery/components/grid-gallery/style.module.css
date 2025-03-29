@@ -63,6 +63,10 @@
     position: relative;
 }
 
+.imageWrapper {
+    position: relative;
+}
+
 .caption {
     position: absolute;
     height: 100%;

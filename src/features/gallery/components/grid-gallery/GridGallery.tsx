@@ -122,12 +122,12 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                                             height: "auto",
                                             display: "block",
                                         }}
-                                        width={image.width}
-                                        height={image.height}
+                                        width={image.width / 5}
+                                        height={image.height / 5}
                                         alt={image.alt}
                                         placeholder="blur"
                                         blurDataURL={image.blurDataURL}
-                                        quality={50}
+                                        quality={40}
                                         onLoad={() =>
                                             handleImageLoad(image.src)
                                         }
