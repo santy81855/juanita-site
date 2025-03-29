@@ -1,0 +1,72 @@
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.buttonContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-block-start: var(--padding-large);
+    padding-block-end: var(--padding-xlarge);
+    gap: var(--padding-medium);
+}
+
+.buttonContainer button {
+    background-color: white;
+    width: 90px;
+    border: none;
+    padding-block: var(--padding-small);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    color: rgb(var(--text-color-rgb));
+}
+
+.button1 {
+    transform: rotate(5.16deg);
+}
+
+.button2 {
+    transform: rotate(-2.97deg);
+}
+
+.button3 {
+    transform: rotate(-5.37deg);
+}
+
+.loader {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: white;
+    z-index: 1;
+    opacity: 1;
+}
+
+.fade {
+    opacity: 0;
+    transition: ease-in-out 0.5s;
+}
+
+.imageContainer {
+    width: 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .buttonContainer button {
+        cursor: pointer;
+        transition: transform 0.5s;
+    }
+
+    .buttonContainer button:hover {
+        transform: scale(1.1);
+    }
+}

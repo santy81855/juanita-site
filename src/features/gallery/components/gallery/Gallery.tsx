@@ -3,6 +3,8 @@ import { client } from "@/sanity/lib/client";
 import * as SanityTypes from "@/@types";
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
+import { getImageDimensions } from "@sanity/asset-utils";
+import GridGallery from "../grid-gallery/GridGallery";
 
 async function getArt() {
     const query = `
@@ -13,20 +15,26 @@ async function getArt() {
 
 const Gallery = async () => {
     const art: SanityTypes.Art[] = await getArt();
+
+    const images = art.map((art: SanityTypes.Art) => {
+        return {
+            art: art,
+            src: urlFor(art.image).url(),
+            width: getImageDimensions(art.image).width,
+            height: getImageDimensions(art.image).height,
+            alt: art.title,
+            caption: art.description,
+            category: art.category,
+        };
+    });
+
+    // const imagesComponent = art.map((art: SanityTypes.Art, key: number) => {
+    //     return <ImageComponent art={art} key={key} />;
+    // });
+
     return (
         <section className={styles.container}>
-            {art.map((art: SanityTypes.Art, key: number) => {
-                return (
-                    <Image
-                        className={styles.image}
-                        objectFit="contain"
-                        key={key}
-                        src={urlFor(art.image).url() || ""}
-                        alt={art.title}
-                        fill
-                    />
-                );
-            })}
+            <GridGallery images={images} />
         </section>
     );
 };
