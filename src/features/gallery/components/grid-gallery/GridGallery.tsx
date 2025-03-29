@@ -96,6 +96,7 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                                     initial={{ opacity: 0 }}
                                     whileInView={{ opacity: 1 }}
                                     transition={{ duration: 0 }}
+                                    viewport={{ once: true, amount: 0.5 }}
                                     onMouseEnter={() => setItemHovered(i)}
                                     onMouseLeave={() => setItemHovered(-1)}
                                     className={`${
