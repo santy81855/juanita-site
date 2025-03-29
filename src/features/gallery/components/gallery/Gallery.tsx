@@ -2,7 +2,6 @@ import styles from "./style.module.css";
 import { client } from "@/sanity/lib/client";
 import * as SanityTypes from "@/@types";
 import { urlFor } from "@/sanity/lib/image";
-import Image from "next/image";
 import { getImageDimensions } from "@sanity/asset-utils";
 import GridGallery from "../grid-gallery/GridGallery";
 

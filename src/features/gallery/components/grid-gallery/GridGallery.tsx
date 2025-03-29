@@ -1,7 +1,6 @@
 "use client";
 import * as SanityTypes from "@/@types";
 import { urlFor } from "@/sanity/lib/image";
-import { getImageDimensions } from "@sanity/asset-utils";
 import Masonry from "react-responsive-masonry";
 import Image from "next/image";
 import styles from "./style.module.css";
@@ -29,7 +28,7 @@ type GridGalleryProps = {
 
 const GridGallery = ({ images }: GridGalleryProps) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [color, setColor] = useState("#ffffff");
+    const color = "ffffff";
     const [numColumns, setNumColumns] = useState(3);
     // create useEffect that will change isLoading to false after 2 seconds
     useEffect(() => {
@@ -80,6 +79,7 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                     )}
                     {images.map((image, i) => (
                         <motion.div
+                            key={i}
                             initial={{
                                 opacity: 0,
                             }}
