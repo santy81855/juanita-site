@@ -22,8 +22,10 @@ const Gallery = async () => {
             width: getImageDimensions(art.image).width,
             height: getImageDimensions(art.image).height,
             alt: art.title,
+            title: art.title,
             caption: art.description,
             category: art.category,
+            blurDataURL: urlFor(art.image).width(10).height(10).blur(10).url(),
         };
     });
 

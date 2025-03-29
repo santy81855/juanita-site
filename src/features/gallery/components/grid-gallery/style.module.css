@@ -49,6 +49,7 @@
     background-color: white;
     z-index: 1;
     opacity: 1;
+    padding-block-start: var(--padding-x2large);
 }
 
 .fade {
@@ -58,6 +59,22 @@
 
 .imageContainer {
     width: 100%;
+    padding-inline: var(--padding-xsmall);
+    position: relative;
+}
+
+.caption {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(1px);
+    color: white;
+    opacity: 0;
+    transition: ease-in-out 0.5s;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -68,5 +85,21 @@
 
     .buttonContainer button:hover {
         transform: scale(1.1);
+    }
+
+    .imageWrapper {
+        transition: ease-in-out 0.5s;
+    }
+
+    .hovered {
+        transform: scale(1.1);
+    }
+
+    .captionHovered {
+        opacity: 1;
+    }
+
+    .focus {
+        opacity: 0.2;
     }
 }
