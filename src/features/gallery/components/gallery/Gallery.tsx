@@ -29,10 +29,6 @@ const Gallery = async () => {
         };
     });
 
-    // const imagesComponent = art.map((art: SanityTypes.Art, key: number) => {
-    //     return <ImageComponent art={art} key={key} />;
-    // });
-
     return (
         <section className={styles.container}>
             <GridGallery images={images} />

@@ -77,6 +77,11 @@
     transition: ease-in-out 0.5s;
 }
 
+.notLoaded {
+    filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
 @media (hover: hover) and (pointer: fine) {
     .buttonContainer button {
         cursor: pointer;

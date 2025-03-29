@@ -3,15 +3,8 @@ import * as SanityTypes from "@/@types";
 import Masonry from "react-responsive-masonry";
 import Image from "next/image";
 import styles from "./style.module.css";
-import { useEffect, useState, CSSProperties } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import ClipLoader from "react-spinners/ClipLoader";
-
-const override: CSSProperties = {
-    display: "block",
-    margin: "0 auto",
-    borderColor: "red",
-};
 
 type GridGalleryProps = {
     images: {
@@ -28,16 +21,26 @@ type GridGalleryProps = {
 };
 
 const GridGallery = ({ images }: GridGalleryProps) => {
-    const [isLoading, setIsLoading] = useState(true);
-    const color = "ffffff";
+    //const [isLoading, setIsLoading] = useState(true);
     const [numColumns, setNumColumns] = useState(3);
     const [curCategory, setCurCategory] = useState("All");
     const [itemHovered, setItemHovered] = useState(-1);
+    const [loadedImages, setLoadedImages] = useState<{
+        [url: string]: boolean;
+    }>({});
+
+    const handleImageLoad = (url: string) => {
+        setLoadedImages((prev) => ({
+            ...prev,
+            [url]: true, // Mark this image as loaded
+        }));
+    };
+
     // create useEffect that will change isLoading to false after 2 seconds
     useEffect(() => {
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 2000);
+        // setTimeout(() => {
+        //     setIsLoading(false);
+        // }, 2000);
         // set up a listener for the resize event
         function handleResize() {
             if (window.innerWidth < 768) {
@@ -84,25 +87,10 @@ const GridGallery = ({ images }: GridGalleryProps) => {
             </section>
             <section className={styles.imageContainer}>
                 <Masonry columnsCount={numColumns} gutter="10px">
-                    {isLoading && (
-                        <section
-                            className={`${styles.loader} ${!isLoading && styles.fade}`}
-                        >
-                            <ClipLoader
-                                color={color}
-                                loading={isLoading}
-                                cssOverride={override}
-                                size={150}
-                                aria-label="Loading Spinner"
-                                data-testid="loader"
-                                speedMultiplier={0.5}
-                            />
-                        </section>
-                    )}
                     {images.map(
                         (image, i) =>
                             (curCategory === "All" ||
-                                curCategory === image.category) && ( // <-- Fixed grouping
+                                curCategory === image.category) && (
                                 <motion.div
                                     key={i}
                                     initial={{ opacity: 0 }}
@@ -114,14 +102,17 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                                         itemHovered === i
                                             ? styles.hovered
                                             : styles.notHovered
-                                    } ${styles.imageWrapper}`}
+                                    } ${styles.imageWrapper} ${
+                                        loadedImages[image.src]
+                                            ? styles.loaded
+                                            : styles.notLoaded
+                                    }`}
                                 >
                                     <div
                                         className={`${styles.caption} ${itemHovered === i && styles.captionHovered}`}
                                     >
                                         {image.title}
                                     </div>
-
                                     <Image
                                         key={i}
                                         src={image.src}
@@ -136,6 +127,9 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                                         placeholder="blur"
                                         blurDataURL={image.blurDataURL}
                                         quality={50}
+                                        onLoad={() =>
+                                            handleImageLoad(image.src)
+                                        }
                                     />
                                 </motion.div>
                             )
