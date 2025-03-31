@@ -3,7 +3,7 @@ import * as SanityTypes from "@/@types";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import Image from "next/image";
 import styles from "./style.module.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 type GridGalleryProps = {
@@ -22,7 +22,7 @@ type GridGalleryProps = {
 
 const GridGallery = ({ images }: GridGalleryProps) => {
     //const [isLoading, setIsLoading] = useState(true);
-    const [numColumns, setNumColumns] = useState(3);
+    const numColumns = 3;
     const [curCategory, setCurCategory] = useState("Drawings");
     const [itemHovered, setItemHovered] = useState(-1);
     const [loadedImages, setLoadedImages] = useState<{
@@ -35,29 +35,6 @@ const GridGallery = ({ images }: GridGalleryProps) => {
             [url]: true, // Mark this image as loaded
         }));
     };
-
-    // create useEffect that will change isLoading to false after 2 seconds
-    // useEffect(() => {
-    //     // setTimeout(() => {
-    //     //     setIsLoading(false);
-    //     // }, 2000);
-    //     // set up a listener for the resize event
-    //     function handleResize() {
-    //         if (window.innerWidth < 768) {
-    //             setNumColumns(3);
-    //         } else if (window.innerWidth < 1024) {
-    //             setNumColumns(4);
-    //         } else {
-    //             setNumColumns(5);
-    //         }
-    //     }
-    //     // add the event listener
-    //     window.addEventListener("resize", handleResize);
-    //     // remove the event listener
-    //     return () => {
-    //         window.removeEventListener("resize", handleResize);
-    //     };
-    // }, []);
 
     const handleCategory = (category: string) => {
         setCurCategory(category);
