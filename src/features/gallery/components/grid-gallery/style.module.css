@@ -13,8 +13,9 @@
     justify-content: center;
     align-items: center;
     padding-block-start: var(--padding-large);
-    padding-block-end: var(--padding-xlarge);
+    padding-block-end: var(--padding-x2large);
     gap: var(--padding-medium);
+    position: relative;
 }
 
 .buttonContainer button {
@@ -24,6 +25,10 @@
     padding-block: var(--padding-small);
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     color: rgb(var(--text-color-rgb));
+    font-family: var(--font-caveat);
+    font-size: var(--font-size-medium);
+    font-weight: bold;
+    position: relative;
 }
 
 .button1 {
@@ -32,10 +37,53 @@
 
 .button2 {
     transform: rotate(-2.97deg);
+    z-index: 1;
+}
+
+/* The glow effect */
+.button2::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 110%;
+    height: 110%;
+    background: radial-gradient(
+        circle,
+        rgba(249, 128, 255, 0.4) 10%,
+        rgba(255, 223, 0, 0) 70%
+    );
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0;
+    transition:
+        transform 0s ease-out,
+        opacity 0.5s ease-out;
+    z-index: -1;
 }
 
 .button3 {
     transform: rotate(-5.37deg);
+}
+
+/* The glow effect */
+.button3::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 110%;
+    height: 110%;
+    background: radial-gradient(
+        circle,
+        rgba(37, 92, 175, 0.4) 10%,
+        rgba(255, 223, 0, 0) 70%
+    );
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0;
+    transition:
+        transform 0s ease-out,
+        opacity 0.5s ease-out;
+    z-index: -1;
 }
 
 .loader {
@@ -59,12 +107,13 @@
 
 .imageContainer {
     width: 100%;
-    padding-inline: var(--padding-xsmall);
+    padding-inline: 10px;
     position: relative;
 }
 
 .imageWrapper {
     position: relative;
+    width: 100%;
 }
 
 .caption {
@@ -86,14 +135,36 @@
     background-color: rgba(0, 0, 0, 0.2);
 }
 
+.backgroundImage {
+    position: absolute;
+    width: 80%;
+    height: auto;
+    z-index: 0;
+    filter: blur(1px);
+    top: 0;
+    right: 0;
+
+    opacity: 0.1;
+}
+
 @media (hover: hover) and (pointer: fine) {
     .buttonContainer button {
         cursor: pointer;
         transition: transform 0.5s;
     }
 
-    .buttonContainer button:hover {
+    .button1:hover,
+    .button2:hover,
+    .button3:hover {
         transform: scale(1.1);
+    }
+
+    /* When hovering, expand the glow */
+    .button2:hover::before,
+    .button3:hover::before {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+        filter: blur(10px);
     }
 
     .imageWrapper {
@@ -102,6 +173,7 @@
 
     .hovered {
         transform: scale(1.1);
+        z-index: 1000;
     }
 
     .captionHovered {
