@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 
 const caveat = Caveat({
     variable: "--font-caveat",
+    subsets: ["latin"],
 });
 
 export default function RootLayout({
