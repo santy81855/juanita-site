@@ -239,9 +239,12 @@
     background-color: white;
     border-radius: var(--border-radius-small);
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    gap: var(--padding-xlarge);
+    align-items: flex-end;
+    width: 100%;
+    max-width: 300px;
+    gap: var(--padding-medium);
     padding-block-start: var(--padding-medium);
     padding-block-end: var(--padding-medium);
     padding-inline: var(--padding-large);
@@ -405,6 +408,13 @@
 @media (width > 700px) {
     .leftSide {
         display: flex;
+    }
+
+    .contactDetails {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        max-width: fit-content;
     }
 }
 
