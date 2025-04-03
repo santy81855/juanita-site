@@ -11,7 +11,7 @@ export async function send(data: {
     const resend = new Resend(process.env.RESEND_API_KEY);
     try {
         let from = "";
-        const template = GeneralMessageTemplate({
+        const template = await GeneralMessageTemplate({
             name: name,
             email: email,
             content: content,
