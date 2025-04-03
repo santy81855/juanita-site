@@ -54,19 +54,19 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                     className={styles.button2}
                     onClick={() => handleCategory("Drawings")}
                 >
-                    Juni
+                    JUNI
                 </button>
                 <button
                     className={styles.button3}
                     onClick={() => handleCategory("Digital Art")}
                 >
-                    Latebis
+                    LATEBIS
                 </button>
                 <button
                     className={styles.button1}
                     onClick={() => handleCategory("Contact")}
                 >
-                    Contact
+                    CONTACT
                 </button>
             </section>
             <section className={styles.imageContainer}>
@@ -74,11 +74,7 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                 <ResponsiveMasonry
                     columnsCountBreakPoints={{ 768: 3, 1024: 4 }}
                 >
-                    <Masonry
-                        sequential={true}
-                        columnsCount={numColumns}
-                        gutter="10px"
-                    >
+                    <Masonry columnsCount={numColumns} gutter="10px">
                         {rearrangedImages.map(
                             (image, i) =>
                                 curCategory === image.category && (
