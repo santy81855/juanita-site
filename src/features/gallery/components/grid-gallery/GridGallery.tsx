@@ -4,6 +4,10 @@ import Image from "next/image";
 import styles from "./style.module.css";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { backArrow, LoadingScreen } from "@/features/gallery";
+// import { send } from "@/actions/email";
 
 type GridGalleryProps = {
     images: {
@@ -19,17 +23,32 @@ type GridGalleryProps = {
     }[];
 };
 
+type ImageItem = {
+    art: SanityTypes.Art;
+    src: string;
+    width: number;
+    height: number;
+    alt: string;
+    caption: string;
+    category: string;
+    blurDataURL: string;
+    title: string;
+};
+
 const GridGallery = ({ images }: GridGalleryProps) => {
     //const [isLoading, setIsLoading] = useState(true);
     const [numColumns, setNumColumns] = useState(3);
-    const [juniColumns, setJuniColumns] = useState<any[][]>([]);
-    const [latebisColumns, setLatebisColumns] = useState<any[][]>([]);
-    const [columns, setColumns] = useState<any[][]>([]);
+    const [juniColumns, setJuniColumns] = useState<ImageItem[][]>([]);
+    const [latebisColumns, setLatebisColumns] = useState<ImageItem[][]>([]);
     const [curCategory, setCurCategory] = useState("Drawings");
     const [itemHovered, setItemHovered] = useState([-1, -1]);
     const [loadedImages, setLoadedImages] = useState<{
         [url: string]: boolean;
     }>({});
+    const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
+    const [message, setMessage] = useState("");
 
     // useEffect to track window size and set number of columns
     useEffect(() => {
@@ -50,7 +69,6 @@ const GridGallery = ({ images }: GridGalleryProps) => {
     }, []);
 
     useEffect(() => {
-        setColumns(distributeImages(images, numColumns));
         // get an array of only the images that are in the "Drawings" category
         const drawings = images.filter(
             (image) => image.category === "Drawings"
@@ -60,11 +78,13 @@ const GridGallery = ({ images }: GridGalleryProps) => {
             (image) => image.category === "Digital Art"
         );
         setLatebisColumns(distributeImages(latebis, numColumns));
-        console.log("columns", distributeImages(images, numColumns));
     }, [numColumns]);
 
-    const distributeImages = (images: any[], numColumns: number) => {
-        const columns: any[][] = Array.from({ length: numColumns }, () => []);
+    const distributeImages = (images: ImageItem[], numColumns: number) => {
+        const columns: ImageItem[][] = Array.from(
+            { length: numColumns },
+            () => []
+        );
         const columnHeights = Array(numColumns).fill(0); // Tracks cumulative height of each column
 
         images.forEach((image) => {
@@ -94,9 +114,105 @@ const GridGallery = ({ images }: GridGalleryProps) => {
         setCurCategory(category);
     };
 
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        /*
+        try {
+            await send({
+                name,
+                email,
+                content: message,
+            });
+            toast.success("Message sent!");
+        } catch (e) {
+            console.log("error: ", e);
+            toast.error("Message failed to send");
+        }*/
+        // wait 3 seconds to show the loading screen
+        try {
+            await new Promise((resolve) => setTimeout(resolve, 3000));
+            toast.success("Message sent!");
+        } catch (e) {
+            console.log("error: ", e);
+            toast.error("Message failed to send");
+        }
+        setLoading(false);
+        setName(name);
+        setEmail(email);
+        setMessage(message);
+    };
+
     return (
         <section className={styles.container}>
-            <section className={styles.buttonContainer}>
+            {curCategory === "Contact" && (
+                <motion.div
+                    initial={{ opacity: 0, y: 100 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    exit={{ opacity: 0, y: 100 }}
+                    className={styles.contactForm}
+                >
+                    <button
+                        className={styles.backButton}
+                        onClick={() => {
+                            setCurCategory("Drawings");
+                            setItemHovered([-1, -1]);
+                        }}
+                    >
+                        {backArrow} BACK
+                    </button>
+                    <section className={styles.headingContainer}>
+                        <p>CONTACT ME, </p>
+                        <Image
+                            src="/logo/logo-small.png"
+                            alt="Logo"
+                            width={900}
+                            height={500}
+                            className={styles.logo}
+                        />
+                    </section>
+                    <section className={styles.formContainer}>
+                        <p className={styles.formText}>
+                            If you have any questions, comments, or just want to
+                            say hi, feel free to reach out!
+                        </p>
+                        <form className={styles.form} onSubmit={handleSubmit}>
+                            {loading && <LoadingScreen />}
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Name"
+                                required
+                            />
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                required
+                            />
+                            <textarea
+                                name="message"
+                                placeholder="Message"
+                                rows={6}
+                                required
+                            ></textarea>
+                            <button type="submit">SEND</button>
+                        </form>
+                    </section>
+                </motion.div>
+            )}
+
+            <motion.div
+                className={styles.buttonContainer}
+                initial={{ opacity: 1, y: 0 }}
+                animate={
+                    curCategory === "Contact"
+                        ? { opacity: 0, y: 30 }
+                        : { opacity: 1, y: 0 }
+                }
+                transition={{ duration: 0.5 }}
+            >
                 <button
                     className={styles.button2}
                     onClick={() => handleCategory("Drawings")}
@@ -115,9 +231,9 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                 >
                     CONTACT
                 </button>
-            </section>
+            </motion.div>
+
             <section className={styles.imageContainer}>
-                {curCategory === "Contact" && <p>hi</p>}
                 {curCategory === "Drawings" && (
                     <section
                         className={styles.masonGrid}

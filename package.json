@@ -18,7 +18,10 @@
     "react-dom": "^19.1.0",
     "react-is": "^19.1.0",
     "react-responsive-masonry": "^2.7.1",
+    "react-social-media-embed": "^2.5.18",
     "react-spinners": "^0.15.0",
+    "react-toastify": "^11.0.5",
+    "resend": "^4.2.0",
     "sanity": "^3.81.0",
     "styled-components": "^6.1.16"
   },
