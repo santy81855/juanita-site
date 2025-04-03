@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { backArrow, LoadingScreen } from "@/features/gallery";
-// import { send } from "@/actions/email";
+import { send } from "@/actions/email";
 
 type GridGalleryProps = {
     images: {
@@ -40,6 +40,7 @@ const GridGallery = ({ images }: GridGalleryProps) => {
     const [numColumns, setNumColumns] = useState(3);
     const [juniColumns, setJuniColumns] = useState<ImageItem[][]>([]);
     const [latebisColumns, setLatebisColumns] = useState<ImageItem[][]>([]);
+    const [allColumns, setAllColumns] = useState<ImageItem[][]>([]);
     const [curCategory, setCurCategory] = useState("Drawings");
     const [itemHovered, setItemHovered] = useState([-1, -1]);
     const [loadedImages, setLoadedImages] = useState<{
@@ -78,6 +79,7 @@ const GridGallery = ({ images }: GridGalleryProps) => {
             (image) => image.category === "Digital Art"
         );
         setLatebisColumns(distributeImages(latebis, numColumns));
+        setAllColumns(distributeImages(images, numColumns));
     }, [numColumns]);
 
     const distributeImages = (images: ImageItem[], numColumns: number) => {
@@ -117,7 +119,6 @@ const GridGallery = ({ images }: GridGalleryProps) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        /*
         try {
             await send({
                 name,
@@ -128,29 +129,21 @@ const GridGallery = ({ images }: GridGalleryProps) => {
         } catch (e) {
             console.log("error: ", e);
             toast.error("Message failed to send");
-        }*/
-        // wait 3 seconds to show the loading screen
-        try {
-            await new Promise((resolve) => setTimeout(resolve, 3000));
-            toast.success("Message sent!");
-        } catch (e) {
-            console.log("error: ", e);
-            toast.error("Message failed to send");
         }
         setLoading(false);
-        setName(name);
-        setEmail(email);
-        setMessage(message);
+        setName("");
+        setEmail("");
+        setMessage("");
     };
 
     return (
         <section className={styles.container}>
             {curCategory === "Contact" && (
                 <motion.div
-                    initial={{ opacity: 0, y: 100 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 100, x: "50%" }}
+                    animate={{ opacity: 1, y: 0, x: "-50%" }}
                     transition={{ duration: 0.5 }}
-                    exit={{ opacity: 0, y: 100 }}
+                    exit={{ opacity: 0, y: 100, x: "0" }}
                     className={styles.contactForm}
                 >
                     <button
@@ -245,147 +238,211 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                     >
                         {juniColumns.map((column, i) => (
                             <section className={styles.gridColumn} key={i}>
-                                {column.map(
-                                    (image, j) =>
-                                        curCategory === image.category && (
-                                            <motion.div
-                                                key={`image-${i}-${j}`}
-                                                initial={{ opacity: 0 }}
-                                                whileInView={{ opacity: 1 }}
-                                                transition={{ duration: 0 }}
-                                                viewport={{
-                                                    once: true,
-                                                    amount: 0.5,
-                                                }}
-                                                onMouseEnter={() =>
-                                                    setItemHovered([i, j])
-                                                }
-                                                onMouseLeave={() =>
-                                                    setItemHovered([-1, -1])
-                                                }
-                                                className={`${
-                                                    itemHovered[0] === i &&
-                                                    itemHovered[1] === j
-                                                        ? styles.hovered
-                                                        : styles.notHovered
-                                                } ${styles.imageWrapper} ${
-                                                    loadedImages[image.src]
-                                                        ? styles.loaded
-                                                        : styles.notLoaded
-                                                }`}
-                                                style={{}}
-                                            >
-                                                <div
-                                                    className={`${styles.caption} ${
-                                                        itemHovered[0] === i &&
-                                                        itemHovered[1] === j &&
-                                                        styles.captionHovered
-                                                    }`}
-                                                >
-                                                    {image.title}
-                                                </div>
-                                                <Image
-                                                    key={i}
-                                                    src={image.src}
-                                                    style={{
-                                                        width: "100%",
-                                                        height: "auto",
-                                                        display: "block",
-                                                    }}
-                                                    width={image.width / 5}
-                                                    height={image.height / 5}
-                                                    alt={image.alt}
-                                                    placeholder="blur"
-                                                    blurDataURL={
-                                                        image.blurDataURL
-                                                    }
-                                                    quality={40}
-                                                    onLoad={() =>
-                                                        handleImageLoad(
-                                                            image.src
-                                                        )
-                                                    }
-                                                />
-                                            </motion.div>
-                                        )
-                                )}
+                                {column.map((image, j) => (
+                                    <motion.div
+                                        key={`image-${i}-${j}`}
+                                        initial={{ opacity: 0 }}
+                                        whileInView={{ opacity: 1 }}
+                                        transition={{ duration: 0 }}
+                                        viewport={{
+                                            once: true,
+                                            amount: 0.5,
+                                        }}
+                                        onMouseEnter={() =>
+                                            setItemHovered([i, j])
+                                        }
+                                        onMouseLeave={() =>
+                                            setItemHovered([-1, -1])
+                                        }
+                                        className={`${
+                                            itemHovered[0] === i &&
+                                            itemHovered[1] === j
+                                                ? styles.hovered
+                                                : styles.notHovered
+                                        } ${styles.imageWrapper} ${
+                                            loadedImages[image.src]
+                                                ? styles.loaded
+                                                : styles.notLoaded
+                                        }`}
+                                        style={{}}
+                                    >
+                                        <div
+                                            className={`${styles.caption} ${
+                                                itemHovered[0] === i &&
+                                                itemHovered[1] === j &&
+                                                styles.captionHovered
+                                            }`}
+                                        >
+                                            {image.title}
+                                        </div>
+                                        <Image
+                                            key={i}
+                                            src={image.src}
+                                            style={{
+                                                width: "100%",
+                                                height: "auto",
+                                                display: "block",
+                                            }}
+                                            width={image.width / 5}
+                                            height={image.height / 5}
+                                            alt={image.alt}
+                                            placeholder="blur"
+                                            blurDataURL={image.blurDataURL}
+                                            quality={40}
+                                            onLoad={() =>
+                                                handleImageLoad(image.src)
+                                            }
+                                        />
+                                    </motion.div>
+                                ))}
                             </section>
                         ))}
                     </section>
                 )}
-                <section
-                    className={styles.masonGrid}
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
-                        gap: "20px",
-                    }}
-                >
-                    {latebisColumns.map((column, i) => (
-                        <section className={styles.gridColumn} key={i}>
-                            {column.map(
-                                (image, j) =>
-                                    curCategory === image.category && (
-                                        <motion.div
-                                            key={`image-${i}-${j}`}
-                                            initial={{ opacity: 0 }}
-                                            whileInView={{ opacity: 1 }}
-                                            transition={{ duration: 0 }}
-                                            viewport={{
-                                                once: true,
-                                                amount: 0.1,
-                                            }}
-                                            onMouseEnter={() =>
-                                                setItemHovered([i, j])
-                                            }
-                                            onMouseLeave={() =>
-                                                setItemHovered([-1, -1])
-                                            }
-                                            className={`${
+                {curCategory === "Digital Art" && (
+                    <section
+                        className={styles.masonGrid}
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
+                            gap: "20px",
+                        }}
+                    >
+                        {latebisColumns.map((column, i) => (
+                            <section className={styles.gridColumn} key={i}>
+                                {column.map((image, j) => (
+                                    <motion.div
+                                        key={`image-${i}-${j}`}
+                                        initial={{ opacity: 0 }}
+                                        whileInView={{ opacity: 1 }}
+                                        transition={{ duration: 0 }}
+                                        viewport={{
+                                            once: true,
+                                            amount: 0.1,
+                                        }}
+                                        onMouseEnter={() =>
+                                            setItemHovered([i, j])
+                                        }
+                                        onMouseLeave={() =>
+                                            setItemHovered([-1, -1])
+                                        }
+                                        className={`${
+                                            itemHovered[0] === i &&
+                                            itemHovered[1] === j
+                                                ? styles.hovered
+                                                : styles.notHovered
+                                        } ${styles.imageWrapper} ${
+                                            loadedImages[image.src]
+                                                ? styles.loaded
+                                                : styles.notLoaded
+                                        }`}
+                                        style={{}}
+                                    >
+                                        <div
+                                            className={`${styles.caption} ${
                                                 itemHovered[0] === i &&
-                                                itemHovered[1] === j
-                                                    ? styles.hovered
-                                                    : styles.notHovered
-                                            } ${styles.imageWrapper} ${
-                                                loadedImages[image.src]
-                                                    ? styles.loaded
-                                                    : styles.notLoaded
+                                                itemHovered[1] === j &&
+                                                styles.captionHovered
                                             }`}
-                                            style={{}}
                                         >
-                                            <div
-                                                className={`${styles.caption} ${
-                                                    itemHovered[0] === i &&
-                                                    itemHovered[1] === j &&
-                                                    styles.captionHovered
-                                                }`}
-                                            >
-                                                {image.title}
-                                            </div>
-                                            <Image
-                                                key={i}
-                                                src={image.src}
-                                                style={{
-                                                    width: "100%",
-                                                    height: "auto",
-                                                    display: "block",
-                                                }}
-                                                width={image.width / 5}
-                                                height={image.height / 5}
-                                                alt={image.alt}
-                                                placeholder="blur"
-                                                blurDataURL={image.blurDataURL}
-                                                quality={40}
-                                                onLoad={() =>
-                                                    handleImageLoad(image.src)
-                                                }
-                                            />
-                                        </motion.div>
-                                    )
-                            )}
-                        </section>
-                    ))}
-                </section>
+                                            {image.title}
+                                        </div>
+                                        <Image
+                                            key={i}
+                                            src={image.src}
+                                            style={{
+                                                width: "100%",
+                                                height: "auto",
+                                                display: "block",
+                                            }}
+                                            width={image.width / 5}
+                                            height={image.height / 5}
+                                            alt={image.alt}
+                                            placeholder="blur"
+                                            blurDataURL={image.blurDataURL}
+                                            quality={40}
+                                            onLoad={() =>
+                                                handleImageLoad(image.src)
+                                            }
+                                        />
+                                    </motion.div>
+                                ))}
+                            </section>
+                        ))}
+                    </section>
+                )}
+                {curCategory === "Contact" && (
+                    <section
+                        className={`${styles.contactGrid}`}
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
+                            gap: "5px",
+                        }}
+                    >
+                        {allColumns.map((column, i) => (
+                            <section className={styles.gridColumn} key={i}>
+                                {column.map((image, j) => (
+                                    <motion.div
+                                        key={`image-${i}-${j}`}
+                                        initial={{ opacity: 0 }}
+                                        whileInView={{ opacity: 1 }}
+                                        transition={{ duration: 0 }}
+                                        viewport={{
+                                            once: true,
+                                            amount: 0.1,
+                                        }}
+                                        onMouseEnter={() =>
+                                            setItemHovered([i, j])
+                                        }
+                                        onMouseLeave={() =>
+                                            setItemHovered([-1, -1])
+                                        }
+                                        className={`${
+                                            itemHovered[0] === i &&
+                                            itemHovered[1] === j
+                                                ? styles.hovered
+                                                : styles.notHovered
+                                        } ${styles.imageWrapper} ${
+                                            loadedImages[image.src]
+                                                ? styles.loaded
+                                                : styles.notLoaded
+                                        }`}
+                                        style={{}}
+                                    >
+                                        <div
+                                            className={`${styles.caption} ${
+                                                itemHovered[0] === i &&
+                                                itemHovered[1] === j &&
+                                                styles.captionHovered
+                                            }`}
+                                        >
+                                            {image.title}
+                                        </div>
+                                        <Image
+                                            key={i}
+                                            src={image.src}
+                                            style={{
+                                                width: "100%",
+                                                height: "auto",
+                                                display: "block",
+                                            }}
+                                            width={image.width / 5}
+                                            height={image.height / 5}
+                                            alt={image.alt}
+                                            placeholder="blur"
+                                            blurDataURL={image.blurDataURL}
+                                            quality={40}
+                                            onLoad={() =>
+                                                handleImageLoad(image.src)
+                                            }
+                                        />
+                                    </motion.div>
+                                ))}
+                            </section>
+                        ))}
+                    </section>
+                )}
             </section>
         </section>
     );
