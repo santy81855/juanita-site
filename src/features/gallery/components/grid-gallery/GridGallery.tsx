@@ -3,7 +3,7 @@ import * as SanityTypes from "@/@types";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import Image from "next/image";
 import styles from "./style.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 type GridGalleryProps = {
@@ -28,6 +28,31 @@ const GridGallery = ({ images }: GridGalleryProps) => {
     const [loadedImages, setLoadedImages] = useState<{
         [url: string]: boolean;
     }>({});
+    const [columns, setColumns] = useState<any[][]>([]);
+
+    useEffect(() => {
+        setColumns(distributeImages(images, numColumns));
+    }, []);
+
+    const distributeImages = (images: any[], numColumns: number) => {
+        const columns: any[][] = Array.from({ length: numColumns }, () => []);
+        const columnHeights = Array(numColumns).fill(0); // Tracks cumulative height of each column
+
+        images.forEach((image) => {
+            // Find the column with the least height
+            const minColumnIndex = columnHeights.indexOf(
+                Math.min(...columnHeights)
+            );
+
+            // Place the image in that column
+            columns[minColumnIndex].push(image);
+
+            // Update the column's total height
+            columnHeights[minColumnIndex] += image.height;
+        });
+
+        return columns;
+    };
 
     // rearrange the images so that the image.title === "Mask Ideation" is the last image
     const rearrangedImages = images.sort((a, b) => {
@@ -95,6 +120,7 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                                                 ? styles.loaded
                                                 : styles.notLoaded
                                         }`}
+                                        style={{ verticalAlign: "bottom" }}
                                     >
                                         <div
                                             className={`${styles.caption} ${itemHovered === i && styles.captionHovered}`}
@@ -108,6 +134,7 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                                                 width: "100%",
                                                 height: "auto",
                                                 display: "block",
+                                                verticalAlign: "bottom",
                                             }}
                                             width={image.width / 5}
                                             height={image.height / 5}
