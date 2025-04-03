@@ -177,18 +177,24 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                                 name="name"
                                 placeholder="Name"
                                 required
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                             />
                             <input
                                 type="email"
                                 name="email"
                                 placeholder="Email"
                                 required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                             <textarea
                                 name="message"
                                 placeholder="Message"
                                 rows={6}
                                 required
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
                             ></textarea>
                             <button type="submit">SEND</button>
                         </form>
