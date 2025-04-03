@@ -5,6 +5,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    padding-block-end: var(--padding-x2large);
 }
 
 .buttonContainer {

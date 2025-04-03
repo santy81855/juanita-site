@@ -333,7 +333,7 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                                             transition={{ duration: 0 }}
                                             viewport={{
                                                 once: true,
-                                                amount: 0.5,
+                                                amount: 0.1,
                                             }}
                                             onMouseEnter={() =>
                                                 setItemHovered([i, j])
