@@ -220,15 +220,54 @@
     z-index: 1;
 }
 
-.contactContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.contactPage {
     position: absolute;
     left: 50%;
     top: 0;
     z-index: 100;
     margin-block-start: var(--padding-xlarge);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--padding-xlarge);
+}
+
+.contactDetails {
+    width: fit-content;
+    align-self: flex-end;
+    background-color: white;
+    border-radius: var(--border-radius-small);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--padding-xlarge);
+    padding-block-start: var(--padding-medium);
+    padding-block-end: var(--padding-medium);
+    padding-inline: var(--padding-large);
+}
+
+.contactDetails p {
+    font-size: calc(var(--font-size-medium) * 1.1);
+    color: rgb(var(--text-color-rgb));
+    font-weight: bold;
+}
+
+.instagramLink {
+    width: 30px;
+    height: 30px;
+}
+
+.instagramLink svg {
+    width: 100%;
+    height: 100%;
+}
+
+.contactContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     overflow: hidden;
     border-radius: var(--border-radius-small);
 }
@@ -329,7 +368,7 @@
     width: 100%;
     padding: var(--padding-small);
     border-radius: var(--border-radius-xsmall);
-    border: 1px solid rgb(var(--text-color-rgb));
+    border: 1px solid rgb(159, 159, 159);
     background-color: transparent;
     color: rgb(var(--text-color-rgb));
     font-size: var(--font-size-medium);
@@ -370,6 +409,11 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+    .instagramLink {
+        cursor: pointer;
+        transition: transform 0.5s;
+    }
+
     .buttonContainer button {
         cursor: pointer;
         transition: transform 0.5s;
