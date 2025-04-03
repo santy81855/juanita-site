@@ -29,6 +29,13 @@ const GridGallery = ({ images }: GridGalleryProps) => {
         [url: string]: boolean;
     }>({});
 
+    // rearrange the images so that the image.title === "Mask Ideation" is the last image
+    const rearrangedImages = images.sort((a, b) => {
+        if (a.title === "Mask Ideation") return 1;
+        if (b.title === "Mask Ideation") return -1;
+        return 0;
+    });
+
     const handleImageLoad = (url: string) => {
         setLoadedImages((prev) => ({
             ...prev,
@@ -67,8 +74,12 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                 <ResponsiveMasonry
                     columnsCountBreakPoints={{ 768: 3, 1024: 4 }}
                 >
-                    <Masonry columnsCount={numColumns} gutter="10px">
-                        {images.map(
+                    <Masonry
+                        sequential={true}
+                        columnsCount={numColumns}
+                        gutter="10px"
+                    >
+                        {rearrangedImages.map(
                             (image, i) =>
                                 curCategory === image.category && (
                                     <motion.div
