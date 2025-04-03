@@ -31,7 +31,13 @@ const Gallery = async () => {
 
     return (
         <section className={styles.container}>
-            <GridGallery images={images} />
+            <GridGallery
+                images={images.sort((a, b) => {
+                    if (a.title === "Mask Ideation") return 1;
+                    if (b.title === "Mask Ideation") return -1;
+                    return 0;
+                })}
+            />
         </section>
     );
 };

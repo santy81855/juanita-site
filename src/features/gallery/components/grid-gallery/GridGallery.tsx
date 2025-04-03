@@ -1,6 +1,5 @@
 "use client";
 import * as SanityTypes from "@/@types";
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import Image from "next/image";
 import styles from "./style.module.css";
 import { useState, useEffect } from "react";
@@ -27,10 +26,28 @@ const GridGallery = ({ images }: GridGalleryProps) => {
     const [latebisColumns, setLatebisColumns] = useState<any[][]>([]);
     const [columns, setColumns] = useState<any[][]>([]);
     const [curCategory, setCurCategory] = useState("Drawings");
-    const [itemHovered, setItemHovered] = useState(-1);
+    const [itemHovered, setItemHovered] = useState([-1, -1]);
     const [loadedImages, setLoadedImages] = useState<{
         [url: string]: boolean;
     }>({});
+
+    // useEffect to track window size and set number of columns
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 600) {
+                setNumColumns(3);
+            } else if (window.innerWidth < 2000) {
+                setNumColumns(4);
+            } else {
+                setNumColumns(5);
+            }
+        };
+
+        handleResize(); // Set initial number of columns
+        window.addEventListener("resize", handleResize);
+
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     useEffect(() => {
         setColumns(distributeImages(images, numColumns));
@@ -65,13 +82,6 @@ const GridGallery = ({ images }: GridGalleryProps) => {
 
         return columns;
     };
-
-    // rearrange the images so that the image.title === "Mask Ideation" is the last image
-    const rearrangedImages = images.sort((a, b) => {
-        if (a.title === "Mask Ideation") return 1;
-        if (b.title === "Mask Ideation") return -1;
-        return 0;
-    });
 
     const handleImageLoad = (url: string) => {
         setLoadedImages((prev) => ({
@@ -108,6 +118,85 @@ const GridGallery = ({ images }: GridGalleryProps) => {
             </section>
             <section className={styles.imageContainer}>
                 {curCategory === "Contact" && <p>hi</p>}
+                {curCategory === "Drawings" && (
+                    <section
+                        className={styles.masonGrid}
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
+                            gap: "10px",
+                        }}
+                    >
+                        {juniColumns.map((column, i) => (
+                            <section className={styles.gridColumn} key={i}>
+                                {column.map(
+                                    (image, j) =>
+                                        curCategory === image.category && (
+                                            <motion.div
+                                                key={`image-${i}-${j}`}
+                                                initial={{ opacity: 0 }}
+                                                whileInView={{ opacity: 1 }}
+                                                transition={{ duration: 0 }}
+                                                viewport={{
+                                                    once: true,
+                                                    amount: 0.5,
+                                                }}
+                                                onMouseEnter={() =>
+                                                    setItemHovered([i, j])
+                                                }
+                                                onMouseLeave={() =>
+                                                    setItemHovered([-1, -1])
+                                                }
+                                                className={`${
+                                                    itemHovered[0] === i &&
+                                                    itemHovered[1] === j
+                                                        ? styles.hovered
+                                                        : styles.notHovered
+                                                } ${styles.imageWrapper} ${
+                                                    loadedImages[image.src]
+                                                        ? styles.loaded
+                                                        : styles.notLoaded
+                                                }`}
+                                                style={{}}
+                                            >
+                                                <div
+                                                    className={`${styles.caption} ${
+                                                        itemHovered[0] === i &&
+                                                        itemHovered[1] === j &&
+                                                        styles.captionHovered
+                                                    }`}
+                                                >
+                                                    {image.title}
+                                                </div>
+                                                <Image
+                                                    key={i}
+                                                    src={image.src}
+                                                    style={{
+                                                        width: "100%",
+                                                        height: "auto",
+                                                        display: "block",
+                                                    }}
+                                                    width={image.width / 5}
+                                                    height={image.height / 5}
+                                                    alt={image.alt}
+                                                    placeholder="blur"
+                                                    blurDataURL={
+                                                        image.blurDataURL
+                                                    }
+                                                    quality={40}
+                                                    onLoad={() =>
+                                                        handleImageLoad(
+                                                            image.src
+                                                        )
+                                                    }
+                                                />
+                                            </motion.div>
+                                        )
+                                )}
+                            </section>
+                        ))}
+                    </section>
+                )}
                 <section
                     className={styles.masonGrid}
                     style={{
@@ -119,10 +208,10 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                     {latebisColumns.map((column, i) => (
                         <section className={styles.gridColumn} key={i}>
                             {column.map(
-                                (image, i) =>
+                                (image, j) =>
                                     curCategory === image.category && (
                                         <motion.div
-                                            key={i}
+                                            key={`image-${i}-${j}`}
                                             initial={{ opacity: 0 }}
                                             whileInView={{ opacity: 1 }}
                                             transition={{ duration: 0 }}
@@ -131,13 +220,14 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                                                 amount: 0.5,
                                             }}
                                             onMouseEnter={() =>
-                                                setItemHovered(i)
+                                                setItemHovered([i, j])
                                             }
                                             onMouseLeave={() =>
-                                                setItemHovered(-1)
+                                                setItemHovered([-1, -1])
                                             }
                                             className={`${
-                                                itemHovered === i
+                                                itemHovered[0] === i &&
+                                                itemHovered[1] === j
                                                     ? styles.hovered
                                                     : styles.notHovered
                                             } ${styles.imageWrapper} ${
@@ -148,7 +238,11 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                                             style={{}}
                                         >
                                             <div
-                                                className={`${styles.caption} ${itemHovered === i && styles.captionHovered}`}
+                                                className={`${styles.caption} ${
+                                                    itemHovered[0] === i &&
+                                                    itemHovered[1] === j &&
+                                                    styles.captionHovered
+                                                }`}
                                             >
                                                 {image.title}
                                             </div>
