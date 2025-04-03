@@ -99,8 +99,8 @@ const GridGallery = ({ images }: GridGalleryProps) => {
             // Place the image in that column
             columns[minColumnIndex].push(image);
 
-            // Update the column's total height
-            columnHeights[minColumnIndex] += image.height;
+            // Update the column's height by the aspect ratio increment rather than by resolution height
+            columnHeights[minColumnIndex] += image.height / image.width;
         });
 
         return columns;
@@ -249,7 +249,6 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                     </section>
                 </motion.div>
             )}
-
             <motion.div
                 className={styles.buttonContainer}
                 initial={{ opacity: 1, y: 0 }}
@@ -279,7 +278,6 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                     CONTACT
                 </button>
             </motion.div>
-
             <section className={styles.imageContainer}>
                 {curCategory === "Drawings" && (
                     <section
@@ -359,7 +357,7 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                         style={{
                             display: "grid",
                             gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
-                            gap: "20px",
+                            gap: "10px",
                         }}
                     >
                         {latebisColumns.map((column, i) => (
