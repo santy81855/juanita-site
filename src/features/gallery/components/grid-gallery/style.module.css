@@ -230,7 +230,6 @@
     z-index: 100;
     margin-block-start: var(--padding-xlarge);
     overflow: hidden;
-    background-color: blue;
     border-radius: var(--border-radius-small);
 }
 
