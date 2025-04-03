@@ -55,8 +55,15 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                 >
                     Latebis
                 </button>
+                <button
+                    className={styles.button1}
+                    onClick={() => handleCategory("Contact")}
+                >
+                    Contact
+                </button>
             </section>
             <section className={styles.imageContainer}>
+                {curCategory === "Contact" && <p>hi</p>}
                 <ResponsiveMasonry
                     columnsCountBreakPoints={{ 768: 3, 1024: 4 }}
                 >

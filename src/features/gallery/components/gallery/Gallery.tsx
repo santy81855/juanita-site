@@ -9,7 +9,7 @@ async function getArt() {
     const query = `
     *[_type == 'art']`;
 
-    return await client.fetch(query);
+    return await client.fetch(query, undefined, { cache: "no-store" });
 }
 
 const Gallery = async () => {
