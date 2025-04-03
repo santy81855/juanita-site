@@ -144,60 +144,86 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                     animate={{ opacity: 1, y: 0, x: "-50%" }}
                     transition={{ duration: 0.5 }}
                     exit={{ opacity: 0, y: 100, x: "0" }}
-                    className={styles.contactForm}
+                    className={styles.contactContainer}
                 >
-                    <button
-                        className={styles.backButton}
-                        onClick={() => {
-                            setCurCategory("Drawings");
-                            setItemHovered([-1, -1]);
-                        }}
-                    >
-                        {backArrow} BACK
-                    </button>
-                    <section className={styles.headingContainer}>
-                        <p>CONTACT ME, </p>
+                    <section className={styles.leftSide}>
                         <Image
-                            src="/logo/logo-small.png"
-                            alt="Logo"
-                            width={900}
-                            height={500}
-                            className={styles.logo}
+                            className={styles.leftImage}
+                            src={
+                                images.filter(
+                                    (image) => image.title === "The Sun"
+                                )[0].src
+                            }
+                            alt="The Sun"
+                            width={
+                                images.filter(
+                                    (image) => image.title === "The Sun"
+                                )[0].width
+                            }
+                            height={
+                                images.filter(
+                                    (image) => image.title === "The Sun"
+                                )[0].height
+                            }
                         />
                     </section>
-                    <section className={styles.formContainer}>
-                        <p className={styles.formText}>
-                            If you have any questions, comments, or just want to
-                            say hi, feel free to reach out!
-                        </p>
-                        <form className={styles.form} onSubmit={handleSubmit}>
-                            {loading && <LoadingScreen />}
-                            <input
-                                type="text"
-                                name="name"
-                                placeholder="Name"
-                                required
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                    <section className={styles.contactForm}>
+                        <button
+                            className={styles.backButton}
+                            onClick={() => {
+                                setCurCategory("Drawings");
+                                setItemHovered([-1, -1]);
+                            }}
+                        >
+                            {backArrow} BACK
+                        </button>
+                        <section className={styles.headingContainer}>
+                            <p>CONTACT ME, </p>
+                            <Image
+                                src="/logo/logo-small.png"
+                                alt="Logo"
+                                width={900}
+                                height={500}
+                                className={styles.logo}
                             />
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Email"
-                                required
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <textarea
-                                name="message"
-                                placeholder="Message"
-                                rows={6}
-                                required
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                            ></textarea>
-                            <button type="submit">SEND</button>
-                        </form>
+                        </section>
+                        <section className={styles.formContainer}>
+                            <p className={styles.formText}>
+                                If you have any questions, comments, or just
+                                want to say hi, feel free to reach out!
+                            </p>
+                            <form
+                                className={styles.form}
+                                onSubmit={handleSubmit}
+                            >
+                                {loading && <LoadingScreen />}
+                                <input
+                                    type="text"
+                                    name="name"
+                                    placeholder="Name"
+                                    required
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                />
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Email"
+                                    required
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                                <textarea
+                                    name="message"
+                                    placeholder="Message"
+                                    rows={6}
+                                    required
+                                    value={message}
+                                    onChange={(e) => setMessage(e.target.value)}
+                                ></textarea>
+                                <button type="submit">SEND</button>
+                            </form>
+                        </section>
                     </section>
                 </motion.div>
             )}
