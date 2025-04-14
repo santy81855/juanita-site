@@ -41,6 +41,8 @@ const GridGallery = ({ images }: GridGalleryProps) => {
     const [numColumns, setNumColumns] = useState(3);
     const [juniColumns, setJuniColumns] = useState<ImageItem[][]>([]);
     const [latebisColumns, setLatebisColumns] = useState<ImageItem[][]>([]);
+    const [pagesColumns, setPagesColumns] = useState<ImageItem[][]>([]);
+    const [flashColumns, setFlashColumns] = useState<ImageItem[][]>([]);
     const [allColumns, setAllColumns] = useState<ImageItem[][]>([]);
     const [curCategory, setCurCategory] = useState("Drawings");
     const [itemHovered, setItemHovered] = useState([-1, -1]);
@@ -79,6 +81,10 @@ const GridGallery = ({ images }: GridGalleryProps) => {
         const latebis = images.filter(
             (image) => image.category === "Digital Art"
         );
+        const pages = images.filter((image) => image.category === "pages");
+        const flash = images.filter((image) => image.category === "FLASH");
+        setPagesColumns(distributeImages(pages, numColumns));
+        setFlashColumns(distributeImages(flash, numColumns));
         setLatebisColumns(distributeImages(latebis, numColumns));
         setAllColumns(distributeImages(images, numColumns));
     }, [numColumns]);
@@ -260,16 +266,28 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                 transition={{ duration: 0.5 }}
             >
                 <button
-                    className={styles.button2}
+                    className={styles.button3}
                     onClick={() => handleCategory("Drawings")}
                 >
                     JUNI
                 </button>
                 <button
-                    className={styles.button3}
+                    className={styles.button2}
                     onClick={() => handleCategory("Digital Art")}
                 >
                     LATEBIS
+                </button>
+                <button
+                    className={styles.button1}
+                    onClick={() => handleCategory("pages")}
+                >
+                    PAGES
+                </button>
+                <button
+                    className={styles.button3}
+                    onClick={() => handleCategory("FLASH")}
+                >
+                    FLASH
                 </button>
                 <button
                     className={styles.button1}
@@ -361,6 +379,150 @@ const GridGallery = ({ images }: GridGalleryProps) => {
                         }}
                     >
                         {latebisColumns.map((column, i) => (
+                            <section className={styles.gridColumn} key={i}>
+                                {column.map((image, j) => (
+                                    <motion.div
+                                        key={`image-${i}-${j}`}
+                                        initial={{ opacity: 0 }}
+                                        whileInView={{ opacity: 1 }}
+                                        transition={{ duration: 0 }}
+                                        viewport={{
+                                            once: true,
+                                            amount: 0.1,
+                                        }}
+                                        onMouseEnter={() =>
+                                            setItemHovered([i, j])
+                                        }
+                                        onMouseLeave={() =>
+                                            setItemHovered([-1, -1])
+                                        }
+                                        className={`${
+                                            itemHovered[0] === i &&
+                                            itemHovered[1] === j
+                                                ? styles.hovered
+                                                : styles.notHovered
+                                        } ${styles.imageWrapper} ${
+                                            loadedImages[image.src]
+                                                ? styles.loaded
+                                                : styles.notLoaded
+                                        }`}
+                                        style={{}}
+                                    >
+                                        <div
+                                            className={`${styles.caption} ${
+                                                itemHovered[0] === i &&
+                                                itemHovered[1] === j &&
+                                                styles.captionHovered
+                                            }`}
+                                        >
+                                            {image.title}
+                                        </div>
+                                        <Image
+                                            key={i}
+                                            src={image.src}
+                                            style={{
+                                                width: "100%",
+                                                height: "auto",
+                                                display: "block",
+                                            }}
+                                            width={image.width / 5}
+                                            height={image.height / 5}
+                                            alt={image.alt}
+                                            placeholder="blur"
+                                            blurDataURL={image.blurDataURL}
+                                            quality={40}
+                                            onLoad={() =>
+                                                handleImageLoad(image.src)
+                                            }
+                                        />
+                                    </motion.div>
+                                ))}
+                            </section>
+                        ))}
+                    </section>
+                )}
+                {curCategory === "pages" && (
+                    <section
+                        className={styles.masonGrid}
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
+                            gap: "10px",
+                        }}
+                    >
+                        {pagesColumns.map((column, i) => (
+                            <section className={styles.gridColumn} key={i}>
+                                {column.map((image, j) => (
+                                    <motion.div
+                                        key={`image-${i}-${j}`}
+                                        initial={{ opacity: 0 }}
+                                        whileInView={{ opacity: 1 }}
+                                        transition={{ duration: 0 }}
+                                        viewport={{
+                                            once: true,
+                                            amount: 0.1,
+                                        }}
+                                        onMouseEnter={() =>
+                                            setItemHovered([i, j])
+                                        }
+                                        onMouseLeave={() =>
+                                            setItemHovered([-1, -1])
+                                        }
+                                        className={`${
+                                            itemHovered[0] === i &&
+                                            itemHovered[1] === j
+                                                ? styles.hovered
+                                                : styles.notHovered
+                                        } ${styles.imageWrapper} ${
+                                            loadedImages[image.src]
+                                                ? styles.loaded
+                                                : styles.notLoaded
+                                        }`}
+                                        style={{}}
+                                    >
+                                        <div
+                                            className={`${styles.caption} ${
+                                                itemHovered[0] === i &&
+                                                itemHovered[1] === j &&
+                                                styles.captionHovered
+                                            }`}
+                                        >
+                                            {image.title}
+                                        </div>
+                                        <Image
+                                            key={i}
+                                            src={image.src}
+                                            style={{
+                                                width: "100%",
+                                                height: "auto",
+                                                display: "block",
+                                            }}
+                                            width={image.width / 5}
+                                            height={image.height / 5}
+                                            alt={image.alt}
+                                            placeholder="blur"
+                                            blurDataURL={image.blurDataURL}
+                                            quality={40}
+                                            onLoad={() =>
+                                                handleImageLoad(image.src)
+                                            }
+                                        />
+                                    </motion.div>
+                                ))}
+                            </section>
+                        ))}
+                    </section>
+                )}
+                {curCategory === "flash" && (
+                    <section
+                        className={styles.masonGrid}
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
+                            gap: "10px",
+                        }}
+                    >
+                        {flashColumns.map((column, i) => (
                             <section className={styles.gridColumn} key={i}>
                                 {column.map((image, j) => (
                                     <motion.div

@@ -11,12 +11,14 @@
 .buttonContainer {
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     padding-block-start: var(--padding-large);
     padding-block-end: var(--padding-x2large);
     gap: var(--padding-medium);
     position: relative;
+    padding-inline: var(--padding-large);
 }
 
 .buttonContainer button {
@@ -27,9 +29,10 @@
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     color: rgb(var(--text-color-rgb));
     font-family: var(--font-caveat);
-    font-size: var(--font-size-medium);
+    font-size: calc(var(--font-size-medium) * 0.8);
     font-weight: bold;
     position: relative;
+    margin-block-start: var(--padding-xsmall);
 }
 
 .button1 {
@@ -202,7 +205,7 @@
 }
 .contactGrid {
     filter: blur(1px);
-    margin-block-start: calc(-2 * var(--padding-x2large));
+    margin-block-start: calc(-3.5 * var(--padding-x2large));
     opacity: 0.5;
     position: relative;
     z-index: 0;
@@ -415,6 +418,18 @@
         justify-content: center;
         align-items: center;
         max-width: fit-content;
+    }
+}
+
+@media (width > 350px) {
+    .contactGrid {
+        margin-block-start: calc(-2.5 * var(--padding-x2large));
+    }
+}
+
+@media (width > 580px) {
+    .contactGrid {
+        margin-block-start: calc(-2 * var(--padding-x2large));
     }
 }
 
